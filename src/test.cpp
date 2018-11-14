@@ -2,19 +2,28 @@
 
 using namespace std;
 typedef long long ll;
-
+const int maxn = 2e5 + 100;
+char str[maxn];
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
     // char str[10000];
-    int n, a, b;
-    scanf("%d%d%d", &n, &a, &b);
-    int ans = 0;
-    for (int i = 1; i < n; i++) {
-        ans = max(min(a/i, b/(n-i)), ans);
+    int len, n; scanf("%d%d", &len, &n);
+    scanf("%s", str);
+    int l = 0, need = n / 2;
+    for (int i = 0; i < len; i++) {
+        if (str[i] == '(') {
+            if (l < need) {
+                putchar('(');
+                l++;
+            }
+        } else {
+            if (l) {
+                putchar(')');l--;need--;
+            }
+        }
     }
-    printf("%d", ans);
     return 0;
 }
