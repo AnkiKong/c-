@@ -1,4 +1,7 @@
 #include <bits/stdc++.h>
+#ifndef LOCAL
+#pragma GCC optimize(3)
+#endif
 using namespace std;
 typedef long long ll;
 // const int maxn=;
