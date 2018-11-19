@@ -1,29 +1,35 @@
 #include <bits/stdc++.h>
 
-using namespace std;
+// using namespace std;
 typedef long long ll;
 const int maxn = 2e5 + 100;
 char str[maxn];
+int cnt[300];
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-    // char str[10000];
-    int len, n; scanf("%d%d", &len, &n);
-    scanf("%s", str);
-    int l = 0, need = n / 2;
-    for (int i = 0; i < len; i++) {
-        if (str[i] == '(') {
-            if (l < need) {
-                putchar('(');
-                l++;
+    int n, mx1 = 0, mx2 = 0, sum = 0, tmp;
+    scanf("%d", &n);
+    if (n < 3) {
+        printf("-1");
+        return 0;
+    } else {
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &tmp);
+            sum += tmp;
+            if (tmp >= mx1) {
+                if (mx1 > mx2) mx2 = mx1;
+                mx1 = tmp;
+            } else if (tmp > mx2) {
+                mx2 = tmp;
             }
-        } else {
-            if (l) {
-                putchar(')');l--;need--;
+            if (i > 1 && mx1 - mx2 < sum - mx1 - mx2) {
+                printf("%d", i + 1);return 0;
             }
         }
     }
-    return 0;
+    printf("-1");
+
 }
