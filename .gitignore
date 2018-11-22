@@ -1,3 +1,4 @@
-*.txt
+in.txt
+out.txt
 *.json
 *.exe
