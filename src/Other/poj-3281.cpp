@@ -9,13 +9,14 @@
 // #define pii pair<int, int>
 // using namespace std;
 // typedef long long ll;
-// const int maxn=1e5;
+// const int maxn=1e6;
+// const int inf = 0x3f3f3f3f;
 // struct node {
 //     int to, f, nxt, from;
 //     node (int a, int b, int c, int d) : to(a), f(b), nxt(c), from(d){}
 //     node() {}
 // };
-// node ve[maxn << 2]; 
+// node ve[maxn];
 // int head[1000];
 // int cnt;
 // void add(int u, int v, int f) {
@@ -24,42 +25,45 @@
 //     ve[cnt] = node(u, 0, head[v], v);
 //     head[v] = cnt++;
 // }
-// bool vis[1000];
+// int vis[1000];
 // int pre[1000];
 // int stop;
 // int bfs() {
 //     queue<int> q;
 //     q.push(0);
 //     memset(vis, 0, sizeof(vis));
+//     vis[0] = 1;
 //     while (!q.empty()) {
 //         int now = q.front(); q.pop();
-//         if (now == stop) return 1;
+//         if (vis[stop]) return vis[stop];
 //         for (int i = head[now]; ~i; i = ve[i].nxt) {
 //             if (!vis[ve[i].to] && ve[i].f) {
-//                 vis[ve[i].to] = 1;
+//                 vis[ve[i].to] = vis[now] + 1;
 //                 q.push(ve[i].to);
 //             } 
 //         }
 //     }
-//     return 0;
+//     return vis[stop];
 // }
 // int cur[1000];
 // int dfs(int v, int flow) {
+//     int fl, sum = 0;
 //     if (v == stop || flow == 0) return flow;
 //     for (int &i = cur[v]; ~i; i = ve[i].nxt) {
 //         node &tmp = ve[i];
-//         if (tmp.f && dfs(tmp.to, tmp.f)) {
-//             ve[i].f -= 1, ve[i ^ 1].f += 1;
-//             return 1;
+//         if (vis[tmp.to] = vis[v] + 1 && (fl = dfs(tmp.to, min(flow, tmp.f)))) {
+//             ve[i].f -= fl, ve[i ^ 1].f += fl;
+//             sum += fl; flow -= fl;
+//             if (!flow) break;
 //         }
 //     }
-//     return 0;
+//     return sum;
 // }
 // int ek() {
 //     int ans = 0;
 //     while (bfs()) {
 //         memcpy(cur, head, sizeof(head));
-//         ans += dfs(1, 1);
+//         ans += dfs(0, inf);
 //     }
 //     return ans;
 // }
