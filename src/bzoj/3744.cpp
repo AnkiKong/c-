@@ -28,13 +28,13 @@ int query(int ss, int bs, int k, int l, int r) {
     if (k <= d) return query(tr[ss].l, tr[bs].l, k, l, mid);
     else return query(tr[ss].r, tr[bs].r, k-d, mid + 1, r);
 }
-// End ZhuXiShu
 int queryK(int ss, int bs, int k, int l, int r) {
     if (l == r) return tr[bs].sum - tr[ss].sum;
     int mid = (l + r) >> 1;
     if (k <= mid) return queryK(tr[ss].l, tr[bs].l, k, l, mid);
     else return queryK(tr[ss].r, tr[bs].r, k, mid+1, r) + tr[tr[bs].l].sum - tr[tr[ss].l].sum;
 }
+// End ZhuXiShu
 int sum[maxn];
 int n, total;
 void add(int x, int val) {
