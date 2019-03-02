@@ -50,3 +50,5 @@ dp:
 2330 3436 差分约束(求最大值：转为a - b <= c,add(a, b, c)跑最短路; 求最小值：转为a - b >= c, add(b, a, c)跑最远路)
 
 1823 tarjan(2-sat) 1051 裸tarjan 2438 tarjan缩点 1093 tarjan+拓扑排序+dp
+
+2152 简单点分
