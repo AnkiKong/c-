@@ -30,6 +30,8 @@ ll query(int ss, int bs, int val, int loc) {
 }
 int sqrtn[maxn];
 int da[maxn];
+int ans[maxn][110];
+int L[110];
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
@@ -43,10 +45,30 @@ int main() {
         sqrtn[i] = sqrt(i);
         ins(root[i]=root[i-1], da[i], 30);
     }
-    for (int i = 1, sq = sqrtn[n]; i <= n; i++) {
-        for (int j = 1; j <= sq; j++) {
-            
+    int bls = sqrtn[n], blc = n / bls + (n % bls != 0);
+    for (int i = 1, l, r; i <= n; i++) {
+        for (int j = 1; j <= blc; j++) {
+            l = bls * (j-1), r = i;
+            if (l > r) continue;
+            ans[r][j] = query(root[l], root[r], da[r], 30);
+            ans[r][j] = max(ans[r][j], ans[r-1][j]);
+            L[j] = l + 1;
         }
+    }
+    L[blc+1] = n;
+    int anss = 0, a, b, l, r;
+    while (m--) {
+        scanf("%d%d", &a, &b);
+        l = (1LL * a + anss) % n + 1;
+        r = (1LL * b + anss) % n + 1;
+        if (l > r) swap(l, r);
+        int lb = (l-1) / bls + 1;
+        anss = ans[r][lb+1];
+        int R = min(r, L[lb+1]);
+        for (int i = l - 1; i <= R; i++) {
+            anss = max(1LL * anss, query(root[i], root[r], da[i-1], 30));
+        }
+        printf("%d\n", anss);
     }
     
     
