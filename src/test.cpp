@@ -1,32 +1,53 @@
-#include <bits/stdc++.h>
+#include <stdio.h>
+#include <set>
+#include <utility>
+#include <iostream>
+#include <algorithm>
+#include <cstring>
 #ifndef LOCAL
 #pragma GCC optimize(3)
 #endif
 using namespace std;
 typedef long long ll;
-#define pii pair<ll, ll>
 const int maxn=3e5+100;
 const int mod=1e9+7;
-pii da[maxn];
-multiset<ll> vis;
+int mn[10], mx[10], sm[10];
+char str[100];
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-    int n, k; scanf("%d%d", &n, &k);
-    for (int i = 0; i < n; i++) {
-        scanf("%lld%lld", &da[i].second, &da[i].first);
+    // ios::sync_with_stdio(0);
+    int n;
+    int t;
+    cin>>t;
+    int a;
+    while (t--) {
+        cin >>n;
+        memset(mn, 0x3f, sizeof(mn));
+        memset(sm, 0, sizeof(sm));
+        memset(mx, 0, sizeof(mx));
+        for (int i=0; i<n; i++) {
+            for (int j=1; j<=6; j++) {
+                cin>>a;
+                mn[j]=min(mn[j], a);
+                mx[j]=max(mx[j], a);
+                sm[j]+=a;
+            }
+        }
+        int q, m; cin>>q;
+        double ans;
+        string s;
+        while (q--) {
+            cin>>s>>m;
+            if (s[1]=='u') ans=sm[m];
+            else if (s[1]=='v') ans=1.0*sm[m]/n;
+            else if (s[1]=='a') ans=mx[m];
+            else if (s[1]=='i') ans=mn[m];
+            cout << int(ans+0.5) << endl;
+        }
     }
-    sort(da, da+n, greater<pii >());
-    ll ans = 0, sum = 0;
-    for (int i = 0; i < n; i++) {
-        sum += da[i].second;
-        vis.insert(da[i].second);
-        if (i >= k) {sum -= *vis.begin(); vis.erase(vis.begin());}
-        ans = max(ans, sum * da[i].first);
-    }
-    // printf("%d", *vis.begin());
-    printf("%lld\n", ans);
+    
     return 0;
 }
