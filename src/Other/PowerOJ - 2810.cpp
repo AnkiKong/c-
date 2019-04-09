@@ -24,12 +24,12 @@ void init() {
         for (int j=0; j<pCnt && i*p[j]<maxn; j++) {
             inp[i*p[j]]=1;
             if(i%p[j]==0) {
-				sum[i*p[j]]=sum[i]*p[j]+1;
-				s[i*p[j]]=s[i]/sum[i]*sum[i*p[j]];
-				break;
-			}
-			s[i*p[j]]=s[i]*(p[j]+1);
-			sum[i*p[j]]=1+p[j];
+                sum[i*p[j]]=sum[i]*p[j]+1;
+                s[i*p[j]]=s[i]/sum[i]*sum[i*p[j]];
+                break;
+            }
+            s[i*p[j]]=s[i]*(p[j]+1);
+            sum[i*p[j]]=1+p[j];
         }
     }
 }
