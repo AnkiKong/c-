@@ -14,24 +14,26 @@ int main() {
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-    set<ll> vis;
-    int n; scanf("%d", &n);
-    ll a, b, ans=0, r;
-    for (int i=0; i<n; i++) {
-        scanf("%lld", &a);
-        vis.insert(a);
-    }
-    int q; scanf("%d", &q);
-    while (q--) {
-        scanf("%lld%lld", &a, &b);
-        b-=a; ans=0; r=*vis.begin()-1;
-        for (auto s=vis.begin(); s!=vis.end(); s++) {
-            if (*s>r) r=*s-1;
-            ans+=*s+b-r;
-            r=*s+b;
-            s=vis.lower_bound(r);
+    auto as = [](int a) {
+        int ans=0;
+        for (int i=1; i<=a; i++) {
+            if (__gcd(a, i)==1) ans+=i;
         }
-        printf("%lld ", ans);
+        return ans;
+    };
+    auto ab = [] (int a) {
+        int ans=a;
+        for (int i=2; i*i<=a; i++) {
+            if (a%i==0) {
+                ans-=ans/i;
+                while (a%i==0) a/=i;
+            }
+        }
+        if (a>1) ans-=ans/a;
+        return ans;
+    };
+    for (int i=1; i<20; i++) {
+        printf("%d %d %d\n", i, as(i), ab(i));
     }
     return 0;
 }
