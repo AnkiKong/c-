@@ -1,39 +1,27 @@
 #include <bits/stdc++.h>
 #ifndef LOCAL
 #pragma GCC optimize(3)
-#define lld "%lld"
-#else
-#define lld "%I64d"
 #endif
+#define IOS ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 using namespace std;
 typedef long long ll;
 const int inf=0x3f3f3f3f;
-const int maxn=510;
+const int maxn=1010;
+int da[maxn];
+int dp[maxn][maxn];
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-    auto as = [](int a) {
-        int ans=0;
-        for (int i=1; i<=a; i++) {
-            if (__gcd(a, i)==1) ans+=i;
+    IOS;
+    cin >> n;
+    for (int i=1; i<=n; i++) cin >> da[i];
+    for (int i=1; i<=n; i++) dp[i][1]=da[i];
+    for (int i=2; i<n; i++) {
+        for (int j=1; j+i<=n; j++) {
+            dp[j][i]=min(dp[])
         }
-        return ans;
-    };
-    auto ab = [] (int a) {
-        int ans=a;
-        for (int i=2; i*i<=a; i++) {
-            if (a%i==0) {
-                ans-=ans/i;
-                while (a%i==0) a/=i;
-            }
-        }
-        if (a>1) ans-=ans/a;
-        return ans;
-    };
-    for (int i=1; i<20; i++) {
-        printf("%d %d %d\n", i, as(i), ab(i));
     }
     return 0;
 }

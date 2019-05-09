@@ -26,7 +26,7 @@ void add(int a, int b, int c) {
     int fa = fin(a), fb = fin(b);
     if (fa != fb) {
         f[fa] = fb;
-        v[fa] = v[b] - v[a] - c; 
+        v[fa] = v[b] - v[a] - c;
     } else if (v[b] - v[a] != c) flag = 0;
 }
 int main() {

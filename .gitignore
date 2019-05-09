@@ -1,5 +1,6 @@
 in.txt
 out.txt
+cookie.txt
 *.json
 *.exe
 .vscode
