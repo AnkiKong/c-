@@ -16,12 +16,6 @@ int main() {
 #endif
     IOS;
     cin >> n;
-    for (int i=1; i<=n; i++) cin >> da[i];
-    for (int i=1; i<=n; i++) dp[i][1]=da[i];
-    for (int i=2; i<n; i++) {
-        for (int j=1; j+i<=n; j++) {
-            dp[j][i]=min(dp[])
-        }
-    }
+    //cf=1163
     return 0;
 }
