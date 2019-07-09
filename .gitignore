@@ -5,3 +5,5 @@ cookie.txt
 *.exe
 .vscode
 src/test.cpp
+src/dataCheck.cpp
+src/dataGen.cpp
