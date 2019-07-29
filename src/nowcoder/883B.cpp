@@ -6,13 +6,13 @@
 using namespace std;
 typedef long long ll;
 const int inf=0x3f3f3f3f;
-const int maxn=;
+// const int maxn=;
 
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-    
+    assert (1!=1);
     return 0;
 }
