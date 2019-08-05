@@ -1,47 +1,94 @@
 #include <bits/stdc++.h>
 #ifndef LOCAL
 #pragma GCC optimize(3)
+#else
 #endif
-#define ls (rt<<1)
-#define rs (rt<<1)|1
-#define mid ((l+r)>>1)
+#define IOS ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 using namespace std;
+
 typedef long long ll;
+const double eps=1e-6;
 const int inf=0x3f3f3f3f;
 const int maxn=1e5+100;
-const int mod=1000000007;
-char str[30];
-bool vis[30];
-int qpow(ll a, int b) {
-    ll ans=1;
-    for (; b; b>>=1, a=a*a%mod) {
-        if (b&1) ans=ans*a%mod;
+struct Line{
+    int k, b;
+    Line(int _k=1, int _b=0) {
+        k=_k, b=_b;
     }
-    return ans;
+    bool operator < (const Line& a) const {
+        return 1LL*b*a.k > 1LL*a.b*k;
+    }
+};
+Line le[maxn];
+#define pii pair<int,int>
+bool cmp(pii a, pii b) {
+    return 1LL*a.first*b.second > 1LL*a.second*b.first;
 }
+vector<pii> aans;
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
-#endif
-    ios::sync_with_stdio(0);
-    int t, n; scanf("%d", &t);
-    for (; t; t--) {
-        scanf("%d%s", &n, str);
-        map<int,int> cnt;
-        for (int i=0; i<26; i++) {
-            if (vis[i]) continue;
-            vis[i]=1;
-            int len=0, j=str[i]-'a';
-            for (; j!=i; j=str[j]-'a', len++) i=j, vis[j]=1;
-            cnt[len]++;
+#endif // LOCAL
+    int t; scanf("%d", &t);
+    for (int n, c; t--;) {
+        scanf("%d%d", &n, &c);
+        int sumk=0, sumb=0;
+        for (int i=1, k, b; i<=n; i++) {
+            scanf("%d%d", &k, &b);
+            le[i]=Line(k, b);
+            sumk+=k; sumb+=b;
         }
-        int tCnt=cnt.size();
-        for (int i=1; i<(1<<tCnt); i++) {
-            ll ans=1;
-            
+        sort(le+1, le+n+1);
+        bool many=0;
+        aans.clear();
+        if (sumk==0 && sumb==c) many=1;
+        else if (sumk!=0) {
+            if (1LL*(c-sumb)*le[n].k>=-1LL*le[n].b*sumk) {
+                int tp=__gcd(abs(sumk), abs(c-sumb));
+                aans.push_back(pii(sumk/tp, (c-sumb)/tp));
+            }
+        }
+        for (int i=n; i>1; i--) {
+            sumb-=2*le[i].b; sumk-=2*le[i].k;
+            if (sumk==0 && sumb==c) many=1;
+            else if (sumk>0) {
+                if (1LL*(c-sumb)*le[i-1].k>=-1LL*le[i-1].b*sumk && 1LL*(c-sumb)*le[i].k<=-1LL*le[i].b*sumk) {
+                    int tp=__gcd(abs(sumk), abs(c-sumb));
+                    aans.push_back(pii(sumk/tp, (c-sumb)/tp));
+                }
+            } else if (sumk<0) {
+                if (1LL*(c-sumb)*le[i-1].k<=-1LL*le[i-1].b*sumk && 1LL*(c-sumb)*le[i].k>=-1LL*le[i].b*sumk) {
+                    int tp=__gcd(abs(sumk), abs(c-sumb));
+                    aans.push_back(pii(sumk/tp, (c-sumb)/tp));
+                }
+            }
+        }
+        sumb-=2*le[1].b; sumk-=2*le[1].k;
+        if (sumk==0 && sumb==c) many=1;
+        else if (sumk!=0) {
+            if (1LL*(c-sumb)*le[1].k>=-1LL*le[1].b*sumk) {
+                int tp=__gcd(abs(sumk), abs(c-sumb));
+                aans.push_back(pii(sumk/tp, (c-sumb)/tp));
+            }
+        }
+        if (many) {
+            printf("-1\n");
+        } else {
+            for (int i=0; i<(int)aans.size(); i++) {
+                pii& a=aans[i];
+                if (a.first<0) a.first=-a.first, a.second=-a.second;
+                if (a.second==0) a.first=1, a.second=0;
+            }
+            sort(aans.begin(), aans.end(), cmp);
+            int ans=unique(aans.begin(), aans.end())-aans.begin();
+            printf("%d", ans);
+            for (int i=0; i<ans; i++) {
+                pii& tp=aans[i];
+                printf(" %d/%d", tp.second, tp.first==0?1:tp.first);
+            }
+            puts("");
         }
     }
-    
     return 0;
 }
