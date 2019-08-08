@@ -8,16 +8,27 @@ typedef long long ll;
 const int inf=0x3f3f3f3f;
 const int maxn=6e4;
 int a[maxn], b[maxn], lis[maxn];
+int pre[maxn];
 bool vis[maxn];
+vector<int> rLis;
 int n;
 int getLIS() {
     int cnt=0;
     for (int i=1; i<=n; i++) {
         if (vis[i]) continue;
-        if (a[i]>lis[cnt]) lis[++cnt]=a[i];
-        else *lower_bound(lis, lis+cnt+1, a[i])=a[i];
+        if (a[i]>lis[cnt]) lis[++cnt]=a[i], pre[a[i]]=lis[cnt-1];
+        else {
+            int lc=lower_bound(lis, lis+cnt+1, a[i])-lis;
+            pre[a[i]]=lis[lc-1];
+            lis[lc]=a[i];
+        }
     }
-    lis[cnt+1]=-1;
+    rLis.clear();
+    rLis.push_back(lis[cnt]);
+    for (int i=pre[lis[cnt]]; i; i=pre[i]) {
+        rLis.push_back(i);
+    }
+    reverse(rLis.begin(), rLis.end());
     return cnt;
 }
 int ans[maxn];
@@ -36,7 +47,7 @@ int main() {
         ans[n]=cnt;
         for (int i=n, j; i>0; i--) {
             j=b[i]; vis[j]=1;
-            if (*lower_bound(lis, lis+cnt+1, a[j])==a[j]) {
+            if (*lower_bound(rLis.begin(), rLis.end(), a[j])==a[j]) {
                 cnt=getLIS();
             }
             ans[i-1]=cnt;
