@@ -1,94 +1,65 @@
 #include <bits/stdc++.h>
 #ifndef LOCAL
 #pragma GCC optimize(3)
-#else
 #endif
 #define IOS ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 using namespace std;
-
 typedef long long ll;
-const double eps=1e-6;
 const int inf=0x3f3f3f3f;
-const int maxn=1e5+100;
-struct Line{
-    int k, b;
-    Line(int _k=1, int _b=0) {
-        k=_k, b=_b;
-    }
-    bool operator < (const Line& a) const {
-        return 1LL*b*a.k > 1LL*a.b*k;
-    }
-};
-Line le[maxn];
-#define pii pair<int,int>
-bool cmp(pii a, pii b) {
-    return 1LL*a.first*b.second > 1LL*a.second*b.first;
+const int maxn=2100;
+char str[maxn];
+int mp[maxn][maxn];
+int sm[maxn][maxn];
+inline get(int lx, int ly, int rx, int ry) {
+    return sm[rx][ry]-sm[rx][ly-1]-sm[lx-1][ry]+sm[lx-1][ly-1];
 }
-vector<pii> aans;
 int main() {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
-#endif // LOCAL
-    int t; scanf("%d", &t);
-    for (int n, c; t--;) {
-        scanf("%d%d", &n, &c);
-        int sumk=0, sumb=0;
-        for (int i=1, k, b; i<=n; i++) {
-            scanf("%d%d", &k, &b);
-            le[i]=Line(k, b);
-            sumk+=k; sumb+=b;
-        }
-        sort(le+1, le+n+1);
-        bool many=0;
-        aans.clear();
-        if (sumk==0 && sumb==c) many=1;
-        else if (sumk!=0) {
-            if (1LL*(c-sumb)*le[n].k>=-1LL*le[n].b*sumk) {
-                int tp=__gcd(abs(sumk), abs(c-sumb));
-                aans.push_back(pii(sumk/tp, (c-sumb)/tp));
-            }
-        }
-        for (int i=n; i>1; i--) {
-            sumb-=2*le[i].b; sumk-=2*le[i].k;
-            if (sumk==0 && sumb==c) many=1;
-            else if (sumk>0) {
-                if (1LL*(c-sumb)*le[i-1].k>=-1LL*le[i-1].b*sumk && 1LL*(c-sumb)*le[i].k<=-1LL*le[i].b*sumk) {
-                    int tp=__gcd(abs(sumk), abs(c-sumb));
-                    aans.push_back(pii(sumk/tp, (c-sumb)/tp));
-                }
-            } else if (sumk<0) {
-                if (1LL*(c-sumb)*le[i-1].k<=-1LL*le[i-1].b*sumk && 1LL*(c-sumb)*le[i].k>=-1LL*le[i].b*sumk) {
-                    int tp=__gcd(abs(sumk), abs(c-sumb));
-                    aans.push_back(pii(sumk/tp, (c-sumb)/tp));
-                }
-            }
-        }
-        sumb-=2*le[1].b; sumk-=2*le[1].k;
-        if (sumk==0 && sumb==c) many=1;
-        else if (sumk!=0) {
-            if (1LL*(c-sumb)*le[1].k>=-1LL*le[1].b*sumk) {
-                int tp=__gcd(abs(sumk), abs(c-sumb));
-                aans.push_back(pii(sumk/tp, (c-sumb)/tp));
-            }
-        }
-        if (many) {
-            printf("-1\n");
-        } else {
-            for (int i=0; i<(int)aans.size(); i++) {
-                pii& a=aans[i];
-                if (a.first<0) a.first=-a.first, a.second=-a.second;
-                if (a.second==0) a.first=1, a.second=0;
-            }
-            sort(aans.begin(), aans.end(), cmp);
-            int ans=unique(aans.begin(), aans.end())-aans.begin();
-            printf("%d", ans);
-            for (int i=0; i<ans; i++) {
-                pii& tp=aans[i];
-                printf(" %d/%d", tp.second, tp.first==0?1:tp.first);
-            }
-            puts("");
+#endif
+    IOS;
+    int n, k; cin >> n >> k;
+    for (int i=1; i<=n; i++) {
+        cin >> str;
+        for (int j=1; j<=n; j++) {
+            mp[i][j]=str[j]=='W';
         }
     }
+    int kk=k*k;
+    for (int i=1; i<=n; i++) {
+        for (int j=1; j<=n; j++) {
+            sm[i][j]=sm[i-1][j]+sm[i][j-1]-sm[i-1][j-1]+mp[i][j];
+        }
+    }
+    int mn=0, ii, jj;
+    for (int i=1; i+k<=n; i++) {
+        for (int j=1; j+k<=n; j++) {
+            int _1=get(i, 1, i+k-1, j-1);
+            int _4=get(1, j, i-1, j+k-1);
+            int _2=get(i+k, j, n, j+k-1);
+            int _3=get(i, j+k, i+k-1, n);
+            int tp=_1+_2+_3+_4+kk;
+            if (tp>mn) {
+                mn=tp; ii=i, jj=j;
+            }
+        }
+    }
+    int ans=0;
+    for (int i=ii; i<ii+k; i++) {
+        int ss=0;
+        for (int j=1; j<=n; j++) {
+            if (j>=jj && j<jj+k) ss+=mp[i][j];
+        }
+        if (ss==n) ans++;
+    }
+    for (int i=ii; i<ii+k; i++) {
+        int ss=0;
+        for (int j=1; j<=n; j++) {
+            if (j>=ii && j<ii+k) ss+=mp[j][i];
+        }
+        if (ss==n) ans++;
+    }
+    cout << ans;
     return 0;
 }
