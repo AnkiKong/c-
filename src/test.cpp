@@ -8,64 +8,57 @@
 using namespace std;
 typedef long long ll;
 typedef pair<int, int> pii;
-const int N = 1e5+10;
+const int N = 2e7+10;
 const int inf = 0x3f3f3f3f;
 const ll INF = 0x3f3f3f3f3f3f3f3f;
-const ll mod = 78294349;
-const double eps = 1e-8;
-const int maxn=3e6;
-const int maxm=1e7;
-int deta[maxn];
-int ans[20][20];
-int vis[101];
-int mn[20];
-queue<int> q;
-void bfs(int a, int b) {
-    memset(vis, 0, sizeof(vis));
-    q.push(0); vis[0]=1;
-    while (!q.empty()) {
-        int x=q.front(); q.pop();
-        if (x+a<=100 && !vis[x+a]) vis[x+a]=vis[x]+1, q.push(x+a);
-        if (x+b<=100 && !vis[x+b]) vis[x+b]=vis[x]+1, q.push(x+b);
-    }
-    for (int i=0; i<=100; i++) vis[i]--;
-    for (int i=0; i<20; i++) mn[i]=1e9;
-    if (a && b) vis[0]=-1;
-    for (int i=0; i<=100; i++) 
-        if (vis[i]!=-1) 
-            mn[i%10]=min(mn[i%10], vis[i]);
+ll da[N];
+ll base10[20];
+int cnt;
+void init() {
+    base10[0]=1;
+    for (int i=1; i<20; i++) base10[i]=base10[i-1]*10;
 }
-
+inline int cal(ll a) {
+    int ans=0;
+    while (a) ans++, a/=10;
+    return ans;
+}
+ll merge(ll a, ll b) {
+    return a*base10[cal(b)]+b;
+}
 int main()
 {
 #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-    string s; cin >> s;
-    int sz=s.size();
-    for (int i=0; i+1<sz; i++) {
-        if (s[i+1]>=s[i]) deta[i]=s[i+1]-s[i];
-        else deta[i]=s[i+1]-s[i]+10;
-    }
-    for (int i=0; i<10; i++) {
-        for (int j=i; j<10; j++) {
-            int aans=0; bfs(i, j);
-            for (int k=0; k+1<sz; k++) {
-                if (mn[deta[k]]==1e9) {
-                    aans=-1; break;
-                } else {
-                    aans+=max(0, mn[deta[k]]-1);
-                }
+    ios::sync_with_stdio(0); cin.tie(0);
+    init();
+    for (ll i=1; i<=1e5; i++) {
+        for (ll j=i+1; j<=1e5; j++) {
+            // if (i==j) continue;
+            if (j*j%i!=0) continue;
+            if (cal(i)+cal(j)+cal(j*j/i)>15) break;
+            ll nw=merge(i, j);
+            ll last=j, newN;
+            for (; ; ) {
+                if (j*last%i!=0) break;
+                newN=j*last/i;
+                if (cal(nw)+cal(newN)>15) break;
+                if (merge(nw, newN)>1e15) break;
+                da[cnt++]=nw=merge(nw, newN);
+                last=newN;
             }
-            ans[i][j]=ans[j][i]=aans;
         }
+        // if (cnt==1413619) break;
+        cout << cnt << endl;
     }
-    for (int i=0; i<10; i++) {
-        for (int j=0; j<10; j++) {
-            printf("%d ", ans[i][j]);
-        }
-        puts("");
+    sort(da, da+cnt);
+    int t; cin >> t;
+    for (ll l, r, T=1; t--; T++) {
+        cin >> l >> r;
+        cout << "Case #" << T << ": ";
+        cout << (upper_bound(da, da+cnt, r)-upper_bound(da, da+cnt, l-1)) << "\n";
     }
     return 0;
 }
